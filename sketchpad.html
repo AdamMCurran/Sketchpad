@@ -3,13 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title>SketchpadOP</title>
-    <link rel="stylesheet" href="style.css" style="text/css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div>Hey there!
+<div class="pixelButton">
+    <button class="numOfPixels">Create Template</button>
 </div>
+<div class="pixelContainer">
+</div>
+
+
+
 <script>
+
+const pixelContainer = document.querySelector(".pixelContainer");
+const pixel = document.querySelector(".pixel");
+const numOfPixels = document.querySelector(".numOfPixels");
+
+    numOfPixels.addEventListener ("click", function(){
+        createPixelGrid();
+    });
+
+let mouseDown = 0;                          //tracking when mouse is clicked down
+document.body.onmousedown = function() {
+    ++mouseDown;
+}
+document.body.onmouseup = function() {
+    --mouseDown;
+}
+
+const div = document.querySelector('div');      //trying to disable click and drag on elements
+div.addEventListener('dragstart', function(e){
+                e.preventDefault()
+            })
+div.addEventListener('drop', function(e){
+                e.preventDefault()
+            })
+
+            
+
+function randomRGB() {                     //random color list function
+    let x = Math.floor(Math.random() * 256)
+    let y = Math.floor(Math.random() * 256)
+    let z = Math.floor(Math.random() * 256)
+    console.log(x,y,z);
+    let rgbList = [x,y,z];
+    return rgbList
+}
+
+function pixWidth () {         // ask for number of pixels(essentially width)
+    let width = Math.floor(parseInt(prompt("Enter a number WIDTH between 1 and 100.")));
+    while (width > 100 || width < 1 || isNaN(width) ){                           //loop until number between 1 and 100 entered
+        let width = Math.floor(parseInt(prompt('That number is not within our range. Please enter a number between 1 and 100.')));
+        if (width < 101 && width >= 1) {
+            console.log(width);
+            return width;
+        }
+    }
+    return width;
+}
+function pixHeight () {
+    let height = Math.floor(parseInt(prompt("Enter a number HEIGHT between 1 and 100.")));
+    while (height > 100 || height < 1 || isNaN(height) ){                           //loop until number between 1 and 100 entered
+        let height = Math.floor(parseInt(prompt('That number is not within our range. Please enter a number between 1 and 100.')));
+        if (height < 101 && height >= 1) {
+            console.log(height);
+            return height;
+        }
+    }
+    return height;
+}
+/*
+function createPixels (){               //old function, not using currently
+    let numPixels = howManyPixels();      //width
+    let size = numPixels * numPixels;       //for a square, length * height
+    //let squareWidth = numPixels * 10; //width should be 10x the number of pixels
+
+    pixelContainer.setAttribute('style','width: numPixels'); //some way to set css width to a variable?
+
+    for (let i=0; i<size; i++) {
+
+        let newPixel = document.createElement("div");   //create number of pixels in a row equal to width
+        newPixel.setAttribute('id','pixel');
+        pixelContainer.appendChild(newPixel);
+    }
+
+    numOfPixels.style.display = "none"; //button disappears
+}
+*/
+
+function createPixelGrid (){
+    let width = parseInt(pixWidth());  //width
+    let height = parseInt(pixHeight());
+    console.log(width,height);
+
+    for (let i = 0; i<width; i++) {
+        let pixelRow = document.createElement("div");
+        pixelRow.setAttribute('class','pixelRow');
+        for (let i=0; i<height; i++) {
+            let newPixel = document.createElement("div");
+            newPixel.setAttribute('class', 'pixel');
+
+            newPixel.addEventListener('mouseover', function(){         // checks if mouse is down
+                if(mouseDown) {
+                    let rgbList = randomRGB();
+                    let r = rgbList[0];
+                    let g = rgbList[1];
+                    let b = rgbList[2];
+                    newPixel.style.backgroundColor = "rgb("+r+","+g+","+b+")"          //changes pixel to random colors
+                }
+            });
+                
+            
+            pixelRow.appendChild(newPixel);
+        }
+        pixelContainer.appendChild(pixelRow);
+    }
+    numOfPixels.style.display = "none";
+}
+
+
 
 </script>
 
